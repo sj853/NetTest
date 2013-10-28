@@ -1,6 +1,7 @@
 package com.sj;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,14 +35,20 @@ public class URLconnecTest {
 					long totalLenth = urlConnection.getContentLength();
 					System.out.println("total-size: "+totalLenth);
 					is = urlConnection.getInputStream();
+					FileOutputStream fileOutputStream = new FileOutputStream("D:/new.exe");
+					os = new BufferedOutputStream(fileOutputStream);
 					long currentLenth = 0;
 					int count  = 0;
+					int bite = 0;
 					while(count == 0){
 						count  = is.available();
 					}
 					byte[] b = new byte[count];
 					while(currentLenth < totalLenth){
-						currentLenth += is.read(b);
+						bite = is.read(b);
+						os.flush();
+						os.write(bite);
+						currentLenth += bite;
 						System.out.println("currentLenth: "+currentLenth);
 					}
 				 
