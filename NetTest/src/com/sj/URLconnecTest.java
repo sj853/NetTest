@@ -56,7 +56,7 @@ public class URLconnecTest {
 					if (currentLength < totalLength) {
 						if (count == 0)
 							continue;
-//						System.out.println("count : " + count);
+						// System.out.println("count : " + count);
 						byte[] b = new byte[count];
 						bite = is.read(b);
 						if (bite == -1) {
@@ -66,22 +66,22 @@ public class URLconnecTest {
 							fileOutputStream.write(b);
 							useTime = System.currentTimeMillis() - startTime;
 							currentUseTime += useTime;
-//							System.out.println("useTime: " + useTime);
+							// System.out.println("useTime: " + useTime);
 							currentLength += bite;
 							try {
-								System.out
-										.println("bite: "
-												+ bite
-												+ "usetime: "
-												+useTime
-												+ " currentLenth: "
-												+ currentLength
-												+ " currentTime: "
-												+ currentUseTime
-												+ " speed: "
-												+ sizeParse(currentLength
-														/ currentUseTime * 1000)
-												+ "/S");
+//								System.out
+//										.println("bite: "
+//												+ bite
+//												+ " usetime: "
+//												+ useTime
+//												+ " currentLenth: "
+//												+ currentLength
+//												+ " currentTime: "
+//												+ currentUseTime
+//												+ " speed: "
+//												+ sizeParse(currentLength
+//														/ currentUseTime * 1000)
+//												+ "/S");
 							} catch (Exception e) {
 							}
 							count = 0;
@@ -107,6 +107,11 @@ public class URLconnecTest {
 
 	}
 
+	/**
+	 * 容量计算
+	 * @param bitLen Byte
+	 * @return 计算后的带单位容量
+	 */
 	public static String sizeParse(long bitLen) {
 		long SIZE_KB = 1024;
 		long SIZE_MB = SIZE_KB * 1024;
@@ -123,28 +128,35 @@ public class URLconnecTest {
 		}
 
 	}
-
-	public static long secondeParse(long time) {
-		return time / 1000;
+	
+	/**
+	 * 计算当前百分比
+	 * @param Byte 
+	 * @return 完成百分比
+	 */
+	public static String doPercentage(long currentByte,long totalByte){
+		return String.format("%.2f", (float)currentByte/(float)totalByte*100).concat("%");
 	}
 
+
 	static long furtherLength = 0;
+	static String percenteage = "0%";
 
 	public static void main(String[] args) {
-//		Timer timer = new Timer(true);
-//		timer.schedule(new TimerTask() {
-//			@Override
-//			public void run() {
-//				try {
-//					if (furtherLength == totalLength)
-//						this.cancel();
-//					System.out.println("currentSpeed: "
-//							+ sizeParse(currentLength - furtherLength));
-//					furtherLength = currentLength;
-//				} catch (Exception e) {
-//				}
-//			}
-//		}, 0, 1000);
+		Timer timer = new Timer(true);
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				try {
+					if (furtherLength != 0 && furtherLength == totalLength)
+						this.cancel();
+					System.out.println("currentSpeed: "
+							+ sizeParse(currentLength - furtherLength)+"/S");
+					furtherLength = currentLength;
+				} catch (Exception e) {
+				}
+			}
+		}, 0, 1000);
 
 		new Thread(new Runnable() {
 
@@ -164,6 +176,24 @@ public class URLconnecTest {
 									* 1000) + "/S");
 				} catch (Exception e) {
 				}
+			}
+		}).start();
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+					while(true){
+						try {
+							Thread.sleep(1000);
+							if(currentLength == totalLength && currentLength!=0 ) break;
+							percenteage = doPercentage(currentLength, totalLength);
+							System.out.println("currentPercenteage: "+percenteage);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
 			}
 		}).start();
 
