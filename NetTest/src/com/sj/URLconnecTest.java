@@ -1,19 +1,13 @@
 package com.sj;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.swing.plaf.SliderUI;
-
-import org.omg.PortableInterceptor.USER_EXCEPTION;
 
 /**
  * 
@@ -27,9 +21,9 @@ public class URLconnecTest {
 
 	static int currentUseTime = 0;
 
-	public static String fileName = "pcmaster_5.02.zip";
+	public static String fileName = "download.17173.com_WOW54.rar";
 
-	public static String domain = "http://down.ruanmei.com/pcmaster/";
+	public static String domain = "http://cdn1.download.17173.com/a47200687d295491007cbfa16a0c5200519fa25f430020d5/2013/";
 
 	public static void download() {
 		String urlStr = domain + fileName;
@@ -42,7 +36,7 @@ public class URLconnecTest {
 			urlConnection = (HttpURLConnection) url.openConnection();
 			urlConnection.setConnectTimeout(15000);
 			if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-				totalLength = urlConnection.getContentLength();
+				totalLength = urlConnection.getContentLengthLong() ;
 				System.out.println("total-size: " + totalLength);
 				is = urlConnection.getInputStream();
 				fileOutputStream = new FileOutputStream("D:/" + fileName);
